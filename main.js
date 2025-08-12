@@ -25,20 +25,8 @@ function initMap() {
 		map,
 	});
 
-	// 오른쪽 상단 상태 표시 div 생성
-	statusDiv = document.createElement("div");
-	statusDiv.id = "gps-status";
-	statusDiv.style.position = "fixed";
-	statusDiv.style.top = "16px";
-	statusDiv.style.right = "16px";
-	statusDiv.style.background = "rgba(0,0,0,0.7)";
-	statusDiv.style.color = "#fff";
-	statusDiv.style.padding = "8px 16px";
-	statusDiv.style.borderRadius = "8px";
-	statusDiv.style.zIndex = "1000";
-	statusDiv.style.fontSize = "1rem";
-	statusDiv.innerText = "GPS: 연결 대기 중...";
-	document.body.appendChild(statusDiv);
+	// 헤더 위치 정보 span 참조
+	statusDiv = document.getElementById("location-info");
 
 	if (navigator.geolocation) {
 		navigator.geolocation.watchPosition(updatePosition, handleError, {
@@ -60,7 +48,7 @@ function updatePosition(position) {
 	pathCoords.push(latLng);
 	pathPolyline.setPath(pathCoords);
 
-	updateStatus(`GPS: 실시간 수신 중\n위도: ${latitude.toFixed(6)}\n경도: ${longitude.toFixed(6)}`);
+	updateStatus(`실시간 수신 중 | 위도: ${latitude.toFixed(6)} | 경도: ${longitude.toFixed(6)}`);
 }
 
 function handleError(error) {
@@ -70,7 +58,5 @@ function handleError(error) {
 function updateStatus(msg) {
 	if (statusDiv) {
 		statusDiv.innerText = msg;
-		// 줄바꿈 처리
-		statusDiv.innerHTML = msg.replace(/\n/g, "<br>");
 	}
 }
