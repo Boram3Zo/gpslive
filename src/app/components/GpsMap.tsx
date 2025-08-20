@@ -132,7 +132,7 @@ export default function GpsMap({ onLocationChange }: { onLocationChange?: (msg: 
 				onLoad={handleMapLoad}
 			/>
 			<div className="flex justify-center items-center flex-col">
-				<div ref={mapRef} id="map" className="size-96"></div>
+				<div ref={mapRef} id="map" className="w-96 h-96"></div>
 				<div className="flex gap-2 justify-center mt-2">
 					<button
 						id="start-btn"
