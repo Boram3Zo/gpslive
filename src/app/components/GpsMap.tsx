@@ -106,6 +106,23 @@ export default function GpsMap({ onLocationChange }: { onLocationChange?: (msg: 
 			} else {
 				// 수동 모드 종료 - 경로 저장 후 페이지 이동
 				if (manualPath.length > 1) {
+					// 기존 경로들 가져오기
+					const existingRoutes = JSON.parse(localStorage.getItem("savedRoutes") || "[]");
+					
+					// 새 경로 객체 생성
+					const newRoute = {
+						id: `route_${Date.now()}`,
+						name: `수동 경로 ${existingRoutes.length + 1}`,
+						createdAt: new Date().toISOString(),
+						path: manualPath,
+						pointCount: manualPath.length
+					};
+					
+					// 경로 목록에 추가
+					existingRoutes.push(newRoute);
+					localStorage.setItem("savedRoutes", JSON.stringify(existingRoutes));
+					
+					// 현재 경로도 별도 저장 (기존 호환성)
 					localStorage.setItem("manualPath", JSON.stringify(manualPath));
 					window.location.href = "/route";
 				}
