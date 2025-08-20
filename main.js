@@ -2,7 +2,8 @@ let map,
 	marker,
 	pathPolyline,
 	pathCoords = [],
-	statusDiv;
+	statusDiv,
+	watchId = null;
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById("map"), {
@@ -28,14 +29,34 @@ function initMap() {
 	// 헤더 위치 정보 span 참조
 	statusDiv = document.getElementById("location-info");
 
+	// 버튼 이벤트 등록
+	document.getElementById("start-btn").addEventListener("click", startTracking);
+	document.getElementById("stop-btn").addEventListener("click", stopTracking);
+
+	updateStatus("GPS: 대기 중...");
+}
+
+function startTracking() {
 	if (navigator.geolocation) {
-		navigator.geolocation.watchPosition(updatePosition, handleError, {
+		if (watchId !== null) {
+			navigator.geolocation.clearWatch(watchId);
+		}
+		watchId = navigator.geolocation.watchPosition(updatePosition, handleError, {
 			enableHighAccuracy: true,
 			maximumAge: 0,
 			timeout: 10000,
 		});
+		updateStatus("GPS: 추적 시작");
 	} else {
 		updateStatus("이 브라우저는 GPS를 지원하지 않습니다.");
+	}
+}
+
+function stopTracking() {
+	if (watchId !== null) {
+		navigator.geolocation.clearWatch(watchId);
+		watchId = null;
+		updateStatus("GPS: 추적 정지");
 	}
 }
 
