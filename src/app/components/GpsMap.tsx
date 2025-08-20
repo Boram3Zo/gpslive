@@ -10,6 +10,7 @@ export default function GpsMap({ onLocationChange }: { onLocationChange?: (msg: 
 	const [tracking, setTracking] = useState(false);
 	const [manualMode, setManualMode] = useState(false);
 	const [manualLatLng, setManualLatLng] = useState<{ lat: number; lng: number } | null>(null);
+	const [manualPath, setManualPath] = useState<google.maps.LatLngLiteral[]>([]);
 	const watchIdRef = useRef<number | null>(null);
 	const mapInstance = useRef<google.maps.Map | null>(null);
 	const markerRef = useRef<google.maps.Marker | null>(null);
@@ -92,7 +93,9 @@ export default function GpsMap({ onLocationChange }: { onLocationChange?: (msg: 
 		setManualMode(prev => {
 			const next = !prev;
 			if (next) {
+				// 수동 모드 시작
 				setManualLatLng(DEFAULT_CENTER);
+				setManualPath([DEFAULT_CENTER]); // 수동 경로 시작점 저장
 				setLocation(`수동 모드 | 위도: ${DEFAULT_CENTER.lat.toFixed(6)} | 경도: ${DEFAULT_CENTER.lng.toFixed(6)}`);
 				pathCoordsRef.current = [DEFAULT_CENTER];
 				if (mapInstance.current && markerRef.current && polylineRef.current) {
@@ -101,6 +104,11 @@ export default function GpsMap({ onLocationChange }: { onLocationChange?: (msg: 
 					polylineRef.current.setPath([DEFAULT_CENTER]);
 				}
 			} else {
+				// 수동 모드 종료 - 경로 저장 후 페이지 이동
+				if (manualPath.length > 1) {
+					localStorage.setItem("manualPath", JSON.stringify(manualPath));
+					window.location.href = "/route";
+				}
 				setManualLatLng(null);
 				setLocation("수동 모드 종료");
 			}
@@ -110,6 +118,9 @@ export default function GpsMap({ onLocationChange }: { onLocationChange?: (msg: 
 
 	// ManualGpsControl에서 지도/마커/경로 업데이트
 	const handleManualMove = (newLatLng: { lat: number; lng: number }) => {
+		// 수동 경로에 추가
+		setManualPath(prev => [...prev, newLatLng]);
+
 		if (mapInstance.current && markerRef.current && polylineRef.current) {
 			markerRef.current.setPosition(newLatLng);
 			mapInstance.current.setCenter(newLatLng);
