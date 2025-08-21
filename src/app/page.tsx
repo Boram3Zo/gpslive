@@ -15,6 +15,9 @@ export default function Home() {
 					<Link href="/routes" className="px-3 py-1 text-sm rounded bg-green-600 text-white hover:bg-green-700">
 						경로 목록
 					</Link>
+					<Link href="/photo" className="px-3 py-1 text-sm rounded bg-purple-600 text-white hover:bg-purple-700">
+						사진 분석
+					</Link>
 				</div>
 				<span>{location}</span>
 			</header>
