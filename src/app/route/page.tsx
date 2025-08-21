@@ -10,6 +10,7 @@ interface CustomMarker {
 	title: string;
 }
 
+// 경로 측청 결과 페이지
 export default function RoutePage() {
 	const mapRef = useRef<HTMLDivElement>(null);
 	const [pathData, setPathData] = useState<google.maps.LatLngLiteral[]>([]);
@@ -241,6 +242,7 @@ export default function RoutePage() {
 					총 {pathData.length}개 지점 | 마커 {customMarkers.length}개
 				</span>
 			</header>
+			{/* 지도 영역 */}
 			<div className="flex justify-center items-center" style={{ marginTop: 56, marginBottom: 56 }}>
 				<div ref={mapRef} className="w-96 h-96"></div>
 			</div>
